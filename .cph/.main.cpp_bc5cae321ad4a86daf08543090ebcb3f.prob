@@ -1,0 +1,1 @@
+{"name":"Local: main","url":"/home/arpit/Desktop/C++/main.cpp","tests":[{"id":1644829655920,"input":"3\n1 3\n3 4 3\n1 3\n3 0 0\n3 3\n0 0 0\n0 2 0\n0 0 0","output":"Case #1: 0\nCase #2: 3\nCase #3: 4"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/arpit/Desktop/C++/main.cpp","group":"local","local":true}

@@ -1,0 +1,4 @@
+
+        creature->printLegs();
+        creature->printName();
+    }

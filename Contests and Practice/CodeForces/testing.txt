@@ -1,0 +1,12 @@
+damn son this\nis some good\nshit right guys?\ncome on man\nGive me some company
+total 244
+-rwxr-xr-x 1 arpit arpit 79608 Oct 23 00:01 1
+-rw-r--r-- 1 arpit arpit  4247 Oct 23 00:01 1.cpp
+drwxr-xr-x 5 arpit arpit 36864 Oct 22 15:56 Contests and Practice
+-rwxr-xr-x 1 arpit arpit 23024 Oct 22 23:46 main
+-rwxrwxrwx 1 arpit arpit  5171 Oct 23 00:18 main.cpp
+-rw-r--r-- 1 arpit arpit    18 Oct 22 23:14 tempCodeRunnerFile.cpp
+-rwxr-xr-x 1 arpit arpit 21984 Oct 19 20:54 Template
+-rwxrwxrwx 1 arpit arpit  3410 Oct 19 20:54 Template.cpp
+-rwxrwxrwx 1 arpit arpit 47240 Mar 12  2022 Test2
+-rw-r--r-- 1 arpit arpit    81 Oct 23 00:18 testing.txt
