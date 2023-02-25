@@ -88,61 +88,39 @@ inline ll ceil(ll a, ll b) { return a / b + ((a ^ b) > 0 && a % b); }   // divid
 inline ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divide a by b rounded down
 /*------------------------------------------END OF TEMPLATE-------------------------------------------*/
 
-ll expo(ll a, ll b) {
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1)
-            res = res * a;
-        a = a * a;
-        b >>= 1;
-    }
-    return res;
-}
-#define int ll
-ll getLess(ll n) {
-    string s = to_string(n);
-
-    auto dp = [&](int l, int r, int any, int done, auto &dp) -> ll {
-        if (l > r) return 1;
-        if (any) {
-            if (done) {  // choose any number
-                ll len = r - l + 1;
-                return expo(10ll, len);
-            } else {
-                return dp(l + 1, r - 1, 1, 1, dp) * 9ll;
-            }
-        } else {
-            if (done) {
-                ll ans = 0;
-                for (char c = '0'; c < s[l]; c++)
-                    ans += dp(l + 1, r, 1, 1, dp);
-                ans += dp(l + 1, r, 0, 1, dp);
-                return ans;
-            } else {  // first character
-                ll ans = 0;
-                for (char c = '1'; c < s[l]; c++)
-                    ans += dp(l + 1, r - 1, 1, 1, dp);
-                if (s[r] >= s[l])  // 2.....4, chose 2.....2
-                    ans += dp(l + 1, r - 1, 0, 1, dp);
-                else  // 3.....1, chose 3.....3
-                    ans += dp(l + 1, r - 1, 0, 1, dp) - 1;
-                return ans;
-            }
-        }
-        return -1;
-    };
-    ll ans = 0;
-    for (int r = 0; r + 1 < s.size(); r++) {
-        ans += dp(0, r, 1, 0, dp);
-    }
-    ans += dp(0, (int)s.size() - 1, 0, 0, dp);
-    return ans;
-}
-#undef int
 void solve() {
-    ll l, r;
-    cin >> l >> r;
-    cout << (getLess(r) - (l > 1 ? getLess(l - 1) : 0)) << endl;
+    ll n, m;
+    cin >> n >> m;
+    vll a(n);
+    fo(i, n) cin >> a[i];
+    ll cur = 0;
+    ll ans = 0;
+    vector<ll> ct(n + m + 1, -1);
+    for (auto &x : a)
+        ct[x] = 0;
+    vll ctt(n + m + 1, 0);
+    fo(i, m) {
+        int x, v;
+        cin >> x >> v;
+        x--;
+        ll prev = a[x];
+        ll next = v;
+        ctt[prev] += i + 1 - ct[prev];
+        ct[prev] = -1;
+        ct[next] = i + 1;
+        a[x] = v;
+    }
+    fok(i, 1, n + m + 1) {
+        if (ct[i] != -1) {
+            ctt[i] += m + 1 - ct[i];
+        }
+    }
+    fok(i, 1, n + m + 1) {
+        ll in = ctt[i], out = m + 1 - ctt[i];
+        ans += in * out;
+        ans += (in * (in - 1)) / 2;
+    }
+    cout << ans << endl;
 }
 
 int main() {
@@ -150,7 +128,7 @@ int main() {
     fastio;
 #endif
     ll tes = 1;
-    // cin >> tes;
+    cin >> tes;
     for (ll t = 1; t <= tes; t++) {
         // cout << "Case #" << t << ": ";
         solve();

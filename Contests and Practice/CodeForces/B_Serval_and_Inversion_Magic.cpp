@@ -88,61 +88,38 @@ inline ll ceil(ll a, ll b) { return a / b + ((a ^ b) > 0 && a % b); }   // divid
 inline ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divide a by b rounded down
 /*------------------------------------------END OF TEMPLATE-------------------------------------------*/
 
-ll expo(ll a, ll b) {
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1)
-            res = res * a;
-        a = a * a;
-        b >>= 1;
+void solve() {
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
+    int i = 0, j = n - 1;
+    int half = n / 2;
+    vb mis(half, false);
+    while (i < j) {
+        if (s[i] != s[j])
+            mis[i] = true;
+        i++;
+        j--;
     }
-    return res;
-}
-#define int ll
-ll getLess(ll n) {
-    string s = to_string(n);
-
-    auto dp = [&](int l, int r, int any, int done, auto &dp) -> ll {
-        if (l > r) return 1;
-        if (any) {
-            if (done) {  // choose any number
-                ll len = r - l + 1;
-                return expo(10ll, len);
-            } else {
-                return dp(l + 1, r - 1, 1, 1, dp) * 9ll;
-            }
-        } else {
-            if (done) {
-                ll ans = 0;
-                for (char c = '0'; c < s[l]; c++)
-                    ans += dp(l + 1, r, 1, 1, dp);
-                ans += dp(l + 1, r, 0, 1, dp);
-                return ans;
-            } else {  // first character
-                ll ans = 0;
-                for (char c = '1'; c < s[l]; c++)
-                    ans += dp(l + 1, r - 1, 1, 1, dp);
-                if (s[r] >= s[l])  // 2.....4, chose 2.....2
-                    ans += dp(l + 1, r - 1, 0, 1, dp);
-                else  // 3.....1, chose 3.....3
-                    ans += dp(l + 1, r - 1, 0, 1, dp) - 1;
-                return ans;
+    int st = n, ed = -1;
+    for (int i = 0; i < half; i++) {
+        if (mis[i]) {
+            st = min(i, st);
+            ed = max(ed, i);
+        }
+    }
+    if (st == n) {
+        cout << "Yes\n";
+    } else {
+        fok(i, st, ed + 1) {
+            if (!mis[i]) {
+                cout << "No\n";
+                return;
             }
         }
-        return -1;
-    };
-    ll ans = 0;
-    for (int r = 0; r + 1 < s.size(); r++) {
-        ans += dp(0, r, 1, 0, dp);
+        cout << "Yes\n";
     }
-    ans += dp(0, (int)s.size() - 1, 0, 0, dp);
-    return ans;
-}
-#undef int
-void solve() {
-    ll l, r;
-    cin >> l >> r;
-    cout << (getLess(r) - (l > 1 ? getLess(l - 1) : 0)) << endl;
 }
 
 int main() {
@@ -150,7 +127,7 @@ int main() {
     fastio;
 #endif
     ll tes = 1;
-    // cin >> tes;
+    cin >> tes;
     for (ll t = 1; t <= tes; t++) {
         // cout << "Case #" << t << ": ";
         solve();

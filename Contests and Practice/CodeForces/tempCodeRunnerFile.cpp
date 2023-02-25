@@ -1,1 +1,4 @@
-k -= actual - i;
+
+        creature->printLegs();
+        creature->printName();
+    }

@@ -1,9 +1,10 @@
 const long long M = 1e9 + 7;
 const int INF = 2147483647;
 const long long INFLL = 9223372036854775807ll;
-#pragma region
+#pragma region Template Start
 #include <algorithm>
 #include <chrono>
+#include <climits>
 #include <cmath>
 #include <cstring>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -25,39 +26,35 @@ const long long INFLL = 9223372036854775807ll;
 #include <vector>
 using namespace std;
 using namespace __gnu_pbds;
+using ll = long long;
+using ld = long double;
+using pii = pair<int, int>;
+using pll = pair<long long, long long>;
+using tiii = tuple<int, int, int>;
+using tlll = tuple<ll, ll, ll>;
+using vi = vector<int>;
+using vvi = vector<vi>;
+using vvvi = vector<vvi>;
+using vll = vector<ll>;
+using vvll = vector<vll>;
+using vvvll = vector<vvll>;
+using vb = vector<bool>;
+using vvb = vector<vb>;
+using vpii = vector<pii>;
+using vpll = vector<pll>;
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+template <typename T>
+using ordered_multiset = tree<T, null_type, less_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
 #define endl '\n'
 #define nl cout << '\n'
-#define ll long long
-#define ld long double
-#define pii pair<int, int>
-#define pll pair<long long, long long>
-#define pil pair<int, long long>
-#define pli pair<long long, int>
-#define vi vector<int>
-#define vvi vector<vi>
-#define vvvi vector<vvi>
-#define vll vector<ll>
-#define vvll vector<vll>
-#define vb vector<bool>
-#define vvb vector<vb>
-#define vs vector<string>
-#define vpii vector<pii>
-#define vpll vector<pll>
-#define vpil vector<pil>
-#define vpli vector<pli>
 #define pb push_back
 #define pob pop_back
 #define mp make_pair
+#define mt make_tuple
 #define ff first
 #define ss second
 #define FIX(number, digits) fixed << setprecision(digits) << number  // use in cout
-#define fastio                        \
-    ios_base::sync_with_stdio(false); \
-    cin.tie(NULL);                    \
-    cout.tie(NULL)
-#define fileio                        \
-    freopen("input.txt", "r", stdin); \
-    freopen("output.txt", "w", stdout)
 #define fok(i, k, n) for (ll i = k; i < n; i++)
 #define Fok(i, k, n) for (ll i = n; i >= k; i--)
 #define fo(i, n) for (ll i = 0; i < n; i++)
@@ -67,82 +64,31 @@ using namespace __gnu_pbds;
 #define allg(v) v.rbegin(), v.rend()
 #define Sort(v) sort(all(v))
 #define Sortg(v) sort(allg(v))
-#define sz(v) v.size()
+#define sz(v) (static_cast<ll>(v.size()))
 #define bs(v, val) binary_search(all(v), val)
 #define lb(v, val) lower_bound(all(v), val)
 #define ub(v, val) upper_bound(all(v), val)
 #define setbits(x) __builtin_popcount(x)
+#define start_clock() auto start_time = std::chrono::high_resolution_clock::now()
+#define measure()                                              \
+    auto end_time = std::chrono::high_resolution_clock::now(); \
+    cerr << (end_time - start_time) / std::chrono::milliseconds(1) << "ms" << endl
 
-// For quickly defining Multidimentional Vectors
-// Use as Vector<dimensions,data_type> vec_name(siz_1,siz_2,...). [Notice Capital 'V'ector].
-// Examples - Vector<2,int> a(5,40),
-// Vector<3,ll> b(5,5); [Here, it is 3-D vector with third dimention as empty, so use push_back like b[0][1].pb(1) to insert in b[0][1][0]].
-template <int D, typename T>
-struct Vector : public vector<Vector<D - 1, T>> {
-    static_assert(D >= 1, "Vector dimension must be greater than zero!");
-    template <typename... Args>
-    Vector(int n = 0, Args... args) : vector<Vector<D - 1, T>>(n, Vector<D - 1, T>(args...)) {
-    }
-};
-template <typename T>
-struct Vector<1, T> : public vector<T> {
-    Vector(int n = 0, const T &val = T()) : vector<T>(n, val) {
-    }
-};
+#define fastio                        \
+    ios_base::sync_with_stdio(false); \
+    cin.tie(NULL);                    \
+    cout.tie(NULL)
+#define fileio                        \
+    freopen("input.txt", "r", stdin); \
+    freopen("output.txt", "w", stdout)
 
-template <typename T>
-using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-template <typename T>
-using ordered_multiset = tree<T, null_type, less_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
+#pragma endregion Template End
+/*-----------------------------------------UTILITY FUNCTIONS------------------------------------------*/
+inline ll ceil(ll a, ll b) { return a / b + ((a ^ b) > 0 && a % b); }   // divide a by b rounded up
+inline ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divide a by b rounded down
+/*------------------------------------------END OF TEMPLATE-------------------------------------------*/
 
-//--------------------------------------------------------------------//
-// DEBUG STATEMENTS!
-void __print(int x) { cerr << x; }
-void __print(long x) { cerr << x; }
-void __print(long long x) { cerr << x; }
-void __print(unsigned x) { cerr << x; }
-void __print(unsigned long x) { cerr << x; }
-void __print(unsigned long long x) { cerr << x; }
-void __print(float x) { cerr << x; }
-void __print(double x) { cerr << x; }
-void __print(long double x) { cerr << x; }
-void __print(char x) { cerr << '\'' << x << '\''; }
-void __print(const char *x) { cerr << '\"' << x << '\"'; }
-void __print(const string &x) { cerr << '\"' << x << '\"'; }
-void __print(bool x) { cerr << (x ? "true" : "false"); }
-template <typename T, typename V>
-void __print(const pair<T, V> &x) {
-    cerr << '{';
-    __print(x.first);
-    cerr << ',';
-    __print(x.second);
-    cerr << '}';
-}
-template <typename T>
-void __print(const T &x) {
-    int f = 0;
-    cerr << '{';
-    for (auto &i : x) cerr << (f++ ? "," : ""), __print(i);
-    cerr << "}";
-}
-void _print() { cerr << "]\n"; }
-template <typename T, typename... V>
-void _print(T t, V... v) {
-    __print(t);
-    if (sizeof...(v)) cerr << ", ";
-    _print(v...);
-}
-#ifndef ONLINE_JUDGE
-#define debug(x...)               \
-    cerr << "[" << #x << "] = ["; \
-    _print(x)
-#else
-#define debug(x...)
-#endif
-// END OF DEBUG STATEMENTS!
-//--------------------------------------------------------------------//
-
-// Modular Class
+#pragma region Modular class
 const ll MOD = M;
 
 // Comment the line above and uncomment the line below if problem requires more than 1 MOD
@@ -279,109 +225,66 @@ class Mint {
         return input;
     }
 };
-// End of ModInt Class
-
-//--------------------------------------------------------------------//
-// Useful Functions
-ll ceil(ll a, ll b) { return a / b + ((a ^ b) > 0 && a % b); }   // divide a by b rounded up
-ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divide a by b rounded down
-
-unsigned ll rng(unsigned ll l = 0, unsigned ll r = 9223372036854775806ll) {
-    mt19937_64 gen(std::random_device{}());
-    unsigned ll res = gen();
-    return res % (r - l + 1) + l;  // Random no in [l, r].
-}
-ll modexp(ll a, ll b, ll m = M) {  // Precise Pow() (a^b)%m
-    a %= m;
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1)
-            res = res * a % m;
-        a = a * a % m;
-        b >>= 1;
-    }
-    return res;
-}
-ll pow2(ll a, ll b) {  // Precise Pow() for integers only
-    ll res = 1;
-    while (b) {
-        if (b & 1)
-            res = (res * a);
-        b >>= 1;
-        a = a * a;
-    }
-    return res;
-}
-bool *prime;
-int *spf;
-void SieveOfEratosthenes(int n = 1e7) {
-    prime = new bool[n + 1];
-    memset(prime, true, n + 1);
-    spf = new int[n + 1];
-    fo(i, n + 1) spf[i] = i;
-    prime[0] = prime[1] = false;
-    for (int p = 2; p * p <= n; p++) {
-        if (prime[p]) {
-            for (int i = p * p; i <= n; i += p) {
-                prime[i] = false;
-                if (spf[i] == i)
-                    spf[i] = p;
-            }
-        }
-    }
-}
-
-Mint *fac, *facNumInv;
-void precomputeNcR(int n = 1e6 + 1) {  // call before using NCR()
-    fac = new Mint[n + 1];
-    facNumInv = new Mint[n + 1];
-    fac[0] = 1;
-    for (int i = 1; i < n; i++) fac[i] = i * fac[i - 1];
-    facNumInv[n - 1] = 1 / fac[n - 1];
-    for (int i = n - 2; i >= 0; i--) facNumInv[i] = (i + 1) * facNumInv[i + 1];
-}
-Mint NCR(ll a, ll b) {  // nCr Modulo M (M is defined at the top).
-    if (b < 0 || b > a) return Mint(0);
-    return (fac[a] * facNumInv[b] * facNumInv[a - b]);
-}
-#pragma endregion
-//-------------------------------------------------------------------------------//
-
-Mint dp(int i, int prev, int par, vi adj[], vi &a) {
-    Mint cur = 0;
-    for (auto x : adj[i]) {
-        if (x != par) {
-            cur += dp(x, a[i], i, adj, a);
-            if (a[i] == 0 && prev == 1)
-                cur += dp(x, prev, i, adj, a);
-        }
-    }
-    Mint val = (a[i] == 1 || prev == 1) ? 1 : 0;
-    return max(val, cur);
-}
+#pragma endregion Modular Class End
 
 void solve() {
     int n;
     cin >> n;
-    vi adj[n];
-    vi a(n);
-    fo(i, n - 1) {
+    vector<vector<int>> adj(n);
+    fok(i, 1, n) {
         int p;
         cin >> p;
-        adj[i + 1].pb(p);
-        adj[p].pb(i + 1);
+        adj[p].pb(i);
     }
+    vector<int> a(n);
     fo(i, n) cin >> a[i];
-    cout << dp(0, 0, -1, adj, a);
+    vector<vector<Mint>> DP(n, vector<Mint>(2));
+    vector<vector<bool>> done(n, vector<bool>(2, false));
+
+    auto dp = [&](int i, int p, auto &dp) -> Mint {
+        if (done[i][p])
+            return DP[i][p];
+        done[i][p] = true;
+        if (p == 0) {
+            if (a[i] == 1) {
+                Mint ans = 1;
+                for (auto &x : adj[i])
+                    ans *= dp(x, 1, dp);
+                return DP[i][p] = ans;
+            } else {
+                Mint ans = 0;
+                if (adj[i].empty()) return 0;
+                Mint prod = 1;
+                for (auto &x : adj[i])
+                    prod *= dp(x, 1, dp);
+                for (auto &x : adj[i]) {
+                    ans += (dp(x, 0, dp) * prod) / dp(x, 1, dp);
+                }
+                return DP[i][p] = ans;
+            }
+        }
+        // p==1
+        Mint ans = dp(i, 0, dp);  // not connecting anything updards
+        if (a[i] == 0) {
+            Mint cur = 1;
+            for (auto &x : adj[i]) {
+                cur *= dp(x, 1, dp);  // can connect others as well
+            }
+            ans += cur;
+        }
+        return DP[i][p] = ans;
+    };
+    cout << dp(0, 0, dp) << endl;
 }
 
 int main() {
 #ifdef ONLINE_JUDGE
     fastio;
 #endif
-    int tes = 1;
+    ll tes = 1;
     // cin >> tes;
-    while (tes--) {
+    for (ll t = 1; t <= tes; t++) {
+        // cout << "Case #" << t << ": ";
         solve();
     }
 }
