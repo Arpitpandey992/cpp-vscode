@@ -7,8 +7,6 @@ const long long INFLL = 9223372036854775807ll;
 #include <climits>
 #include <cmath>
 #include <cstring>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -25,7 +23,6 @@ const long long INFLL = 9223372036854775807ll;
 #include <unordered_set>
 #include <vector>
 using namespace std;
-using namespace __gnu_pbds;
 using ll = long long;
 using ld = long double;
 using pii = pair<int, int>;
@@ -42,10 +39,6 @@ using vb = vector<bool>;
 using vvb = vector<vb>;
 using vpii = vector<pii>;
 using vpll = vector<pll>;
-template <typename T>
-using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-template <typename T>
-using ordered_multiset = tree<T, null_type, less_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
 #define endl '\n'
 #define nl cout << '\n'
 #define pb push_back
@@ -89,6 +82,7 @@ inline ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divid
 /*------------------------------------------END OF TEMPLATE-------------------------------------------*/
 
 void solve() {
+    cout << "damn" << endl;
 }
 
 int main() {
