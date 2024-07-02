@@ -1,5 +1,4 @@
 {
-    "terminal.integrated.defaultProfile.linux": "bash",
     "files.associations": {
         "array": "cpp",
         "atomic": "cpp",
@@ -90,6 +89,10 @@
         "*.inc": "cpp",
         "climits": "cpp",
         "hash_map": "cpp",
-        "stacktrace": "cpp"
+        "stacktrace": "cpp",
+        "format": "cpp",
+        "expected": "cpp",
+        "spanstream": "cpp",
+        "stdfloat": "cpp"
     },
 }

@@ -83,83 +83,65 @@ using ordered_multiset = tree<T, null_type, less_equal<T>, rb_tree_tag, tree_ord
     freopen("output.txt", "w", stdout)
 
 #pragma endregion Template End
-
 /*-----------------------------------------UTILITY FUNCTIONS------------------------------------------*/
-#pragma region Debug Statements
-void __print(int x) { cerr << x; }
-void __print(long x) { cerr << x; }
-void __print(long long x) { cerr << x; }
-void __print(unsigned x) { cerr << x; }
-void __print(unsigned long x) { cerr << x; }
-void __print(unsigned long long x) { cerr << x; }
-void __print(float x) { cerr << x; }
-void __print(double x) { cerr << x; }
-void __print(long double x) { cerr << x; }
-void __print(char x) { cerr << '\'' << x << '\''; }
-void __print(const char *x) { cerr << '\"' << x << '\"'; }
-void __print(const string &x) { cerr << '\"' << x << '\"'; }
-void __print(bool x) { cerr << (x ? "true" : "false"); }
-template <typename T, typename V>
-void __print(const pair<T, V> &x) {
-    cerr << '{';
-    __print(x.first);
-    cerr << ',';
-    __print(x.second);
-    cerr << '}';
-}
-template <typename T>
-void __print(const T &x) {
-    int f = 0;
-    cerr << '{';
-    for (auto &i : x) cerr << (f++ ? "," : ""), __print(i);
-    cerr << "}";
-}
-template <typename T>
-void __print(priority_queue<T> &q) {
-    vector<T> v;
-    while (q.size()) {
-        v.pb(q.top());
-        q.pop();
-    }
-    __print(v);
-    for (auto &i : v) q.push(i);
-}
-template <typename T>
-void __print(stack<T> &s) {
-    vector<T> v;
-    while (s.size()) {
-        v.pb(s.top());
-        s.pop();
-    }
-    reverse(all(v));
-    __print(v);
-    for (auto &i : v) s.push(i);
-}
-void _print() { cerr << "]\n"; }
-template <typename T, typename... V>
-void _print(T t, V... v) {
-    __print(t);
-    if (sizeof...(v)) cerr << ", ";
-    _print(v...);
-}
-#ifndef ONLINE_JUDGE
-#define debug(x...)               \
-    cerr << "[" << #x << "] = ["; \
-    _print(x)
-#else
-#define debug(x...)
-#endif
-#pragma endregion Debug end
 inline ll ceil(ll a, ll b) { return a / b + ((a ^ b) > 0 && a % b); }   // divide a by b rounded up
 inline ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divide a by b rounded down
 /*------------------------------------------END OF TEMPLATE-------------------------------------------*/
 
-int main() {
-    vector<int> a = {1, 2, 3, 4, 5};
-    vector<int> b = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    a.resize(b.size(), 0);
-    for (int i = 0; i < b.size(); i++) {
-        a[i] += b[i];
+void solve() {
+    int n;
+    cin >> n;
+    vi b(n);
+    fo(i, n) cin >> b[i];
+    if (n == 1) {
+        cout << 1 << endl;
+        return;
     }
-    debug(a);
+    Sort(b);
+    vpii a;
+    int i = 0;
+    while (i < n) {
+        int j = i;
+        while (j < n && b[i] == b[j])
+            j++;
+        a.pb({b[i], j - i});
+        i = j;
+    }
+    n = a.size();
+    vector<vector<int>> DP(n + 2, vector<int>(2 * n + 1, 0));
+    for (int i = n + 1; i >= 0; i--) {
+        for (int extra = 0; extra <= i; extra++) {
+            if (i >= n) {
+                DP[i][extra] = 0;
+                continue;
+            }
+            DP[i][extra] = 1 + DP[i + 1][extra + 1];  // allow alice to eat ith cake type
+            if (extra > a[i].second) {
+                int aliceEats = a[i].second;
+                DP[i][extra] = min(DP[i][extra], DP[i + 1][extra - a[i].second]);
+            } else if (extra == a[i].second) {
+                int add = (i + 1 < n ? 1 : 0);
+                DP[i][extra] = min(DP[i][extra], add + DP[i + 2][1]);  // alice will eat the next one as well because it is her chance right after bob finishes eating the ith cake
+            }
+        }
+    }
+    // for (int i = 0; i < n; i++) {
+    //     for (int extra = 0; extra <= i; extra++) {
+    //         cout << DP[i][extra] << " ";
+    //     }
+    //     cout << endl;
+    // }
+    cout << 1 + DP[1][1] << endl;
+}
+
+int main() {
+#ifdef ONLINE_JUDGE
+    fastio;
+#endif
+    ll tes = 1;
+    cin >> tes;
+    for (ll t = 1; t <= tes; t++) {
+        // cout << "Case #" << t << ": ";
+        solve();
+    }
 }

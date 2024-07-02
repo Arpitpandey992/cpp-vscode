@@ -83,83 +83,69 @@ using ordered_multiset = tree<T, null_type, less_equal<T>, rb_tree_tag, tree_ord
     freopen("output.txt", "w", stdout)
 
 #pragma endregion Template End
-
 /*-----------------------------------------UTILITY FUNCTIONS------------------------------------------*/
-#pragma region Debug Statements
-void __print(int x) { cerr << x; }
-void __print(long x) { cerr << x; }
-void __print(long long x) { cerr << x; }
-void __print(unsigned x) { cerr << x; }
-void __print(unsigned long x) { cerr << x; }
-void __print(unsigned long long x) { cerr << x; }
-void __print(float x) { cerr << x; }
-void __print(double x) { cerr << x; }
-void __print(long double x) { cerr << x; }
-void __print(char x) { cerr << '\'' << x << '\''; }
-void __print(const char *x) { cerr << '\"' << x << '\"'; }
-void __print(const string &x) { cerr << '\"' << x << '\"'; }
-void __print(bool x) { cerr << (x ? "true" : "false"); }
-template <typename T, typename V>
-void __print(const pair<T, V> &x) {
-    cerr << '{';
-    __print(x.first);
-    cerr << ',';
-    __print(x.second);
-    cerr << '}';
-}
-template <typename T>
-void __print(const T &x) {
-    int f = 0;
-    cerr << '{';
-    for (auto &i : x) cerr << (f++ ? "," : ""), __print(i);
-    cerr << "}";
-}
-template <typename T>
-void __print(priority_queue<T> &q) {
-    vector<T> v;
-    while (q.size()) {
-        v.pb(q.top());
-        q.pop();
-    }
-    __print(v);
-    for (auto &i : v) q.push(i);
-}
-template <typename T>
-void __print(stack<T> &s) {
-    vector<T> v;
-    while (s.size()) {
-        v.pb(s.top());
-        s.pop();
-    }
-    reverse(all(v));
-    __print(v);
-    for (auto &i : v) s.push(i);
-}
-void _print() { cerr << "]\n"; }
-template <typename T, typename... V>
-void _print(T t, V... v) {
-    __print(t);
-    if (sizeof...(v)) cerr << ", ";
-    _print(v...);
-}
-#ifndef ONLINE_JUDGE
-#define debug(x...)               \
-    cerr << "[" << #x << "] = ["; \
-    _print(x)
-#else
-#define debug(x...)
-#endif
-#pragma endregion Debug end
 inline ll ceil(ll a, ll b) { return a / b + ((a ^ b) > 0 && a % b); }   // divide a by b rounded up
 inline ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divide a by b rounded down
 /*------------------------------------------END OF TEMPLATE-------------------------------------------*/
+const int MX = 1e6 + 1;
+vector<vector<int>> fac;
+
+void solve() {
+    int n, m;
+    cin >> n >> m;
+    vvi a(n, vi(m));
+    fo(i, n) {
+        fo(j, m) {
+            cin >> a[i][j];
+        }
+    }
+
+    vector<vector<bool>> DP(n + 1, vector<bool>(m + 1, false));
+    auto dfs = [&a, &n, &m, &DP](int fac) -> bool {
+        fill(DP.begin(), DP.end(), vector<bool>(m + 1, false));
+        DP[n - 1][m - 1] = true;
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = m - 1; j >= 0; j--) {
+                if (i == n - 1 && j == m - 1)
+                    continue;
+                DP[i][j] = (a[i][j] % fac == 0) && (DP[i + 1][j] || DP[i][j + 1]);
+            }
+        }
+        return DP[0][0];
+    };
+
+    int g = __gcd(a[0][0], a[n - 1][m - 1]);
+    vector<int>& f = fac[g];
+    vector<bool> doo(f.size(), true);
+    int ans = 1;
+    for (int i = 0; i < f.size(); i++) {
+        if (!doo[i])
+            continue;
+        if (dfs(f[i]))
+            ans = f[i];
+        else {
+            for (int j = i + 1; j < f.size(); j++)
+                if (f[j] % f[i] == 0)
+                    doo[j] = false;
+        }
+    }
+    cout << ans << endl;
+}
 
 int main() {
-    vector<int> a = {1, 2, 3, 4, 5};
-    vector<int> b = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    a.resize(b.size(), 0);
-    for (int i = 0; i < b.size(); i++) {
-        a[i] += b[i];
+#ifdef ONLINE_JUDGE
+    fastio;
+#endif
+    fac.resize(MX);
+    for (int i = 2; i < MX; i++) {
+        for (int j = i; j < MX; j += i) {
+            fac[j].push_back(i);
+        }
     }
-    debug(a);
+    ll tes = 1;
+    cin >> tes;
+    for (ll t = 1; t <= tes; t++) {
+        // cout << "Case #" << t << ": ";
+        solve();
+    }
 }

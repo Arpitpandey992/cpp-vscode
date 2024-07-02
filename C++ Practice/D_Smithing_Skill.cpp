@@ -83,83 +83,76 @@ using ordered_multiset = tree<T, null_type, less_equal<T>, rb_tree_tag, tree_ord
     freopen("output.txt", "w", stdout)
 
 #pragma endregion Template End
-
 /*-----------------------------------------UTILITY FUNCTIONS------------------------------------------*/
-#pragma region Debug Statements
-void __print(int x) { cerr << x; }
-void __print(long x) { cerr << x; }
-void __print(long long x) { cerr << x; }
-void __print(unsigned x) { cerr << x; }
-void __print(unsigned long x) { cerr << x; }
-void __print(unsigned long long x) { cerr << x; }
-void __print(float x) { cerr << x; }
-void __print(double x) { cerr << x; }
-void __print(long double x) { cerr << x; }
-void __print(char x) { cerr << '\'' << x << '\''; }
-void __print(const char *x) { cerr << '\"' << x << '\"'; }
-void __print(const string &x) { cerr << '\"' << x << '\"'; }
-void __print(bool x) { cerr << (x ? "true" : "false"); }
-template <typename T, typename V>
-void __print(const pair<T, V> &x) {
-    cerr << '{';
-    __print(x.first);
-    cerr << ',';
-    __print(x.second);
-    cerr << '}';
-}
-template <typename T>
-void __print(const T &x) {
-    int f = 0;
-    cerr << '{';
-    for (auto &i : x) cerr << (f++ ? "," : ""), __print(i);
-    cerr << "}";
-}
-template <typename T>
-void __print(priority_queue<T> &q) {
-    vector<T> v;
-    while (q.size()) {
-        v.pb(q.top());
-        q.pop();
-    }
-    __print(v);
-    for (auto &i : v) q.push(i);
-}
-template <typename T>
-void __print(stack<T> &s) {
-    vector<T> v;
-    while (s.size()) {
-        v.pb(s.top());
-        s.pop();
-    }
-    reverse(all(v));
-    __print(v);
-    for (auto &i : v) s.push(i);
-}
-void _print() { cerr << "]\n"; }
-template <typename T, typename... V>
-void _print(T t, V... v) {
-    __print(t);
-    if (sizeof...(v)) cerr << ", ";
-    _print(v...);
-}
-#ifndef ONLINE_JUDGE
-#define debug(x...)               \
-    cerr << "[" << #x << "] = ["; \
-    _print(x)
-#else
-#define debug(x...)
-#endif
-#pragma endregion Debug end
 inline ll ceil(ll a, ll b) { return a / b + ((a ^ b) > 0 && a % b); }   // divide a by b rounded up
 inline ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divide a by b rounded down
 /*------------------------------------------END OF TEMPLATE-------------------------------------------*/
 
-int main() {
-    vector<int> a = {1, 2, 3, 4, 5};
-    vector<int> b = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    a.resize(b.size(), 0);
-    for (int i = 0; i < b.size(); i++) {
-        a[i] += b[i];
+void solve() {
+    ll n, m;
+    cin >> n >> m;
+    vll a(n), b(n), c(m);
+    fo(i, n) cin >> a[i];
+    fo(i, n) cin >> b[i];
+    fo(i, m) cin >> c[i];
+    vpll dela;
+    fo(i, n) {
+        ll del = a[i] - b[i];
+        dela.pb({del, a[i]});
     }
-    debug(a);
+    Sort(dela);
+    ll minVal = INFLL;
+    set<ll> got;
+    vpll newDela;
+    for (auto &[del, aa] : dela) {
+        if (got.contains(del) || aa >= minVal)
+            continue;
+        minVal = aa;
+        got.insert(del);
+        newDela.pb({del, aa});
+    }
+    dela = newDela;
+    vector<ll> sortedList;
+    for (auto &[_, aa] : dela) {
+        sortedList.pb(aa);  // descending sort
+    }
+    reverse(all(sortedList));
+    ll ans = 0;
+    Sortg(c);
+    map<ll, ll> cache;
+
+    auto recur = [&](int x, auto &recur) -> ll {
+        if (x <= 0)
+            return 0;
+        if (cache.contains(x)) {
+            return cache[x];
+        }
+        auto index = upper_bound(sortedList.begin(), sortedList.end(), x) - sortedList.begin() - 1;
+        ll i = (1ll * sortedList.size()) - 1 - index;
+        if (i < 0 || i >= sortedList.size())
+            return 0;
+        auto &[del, aa] = dela[i];
+        ll k = (x - aa) / del;
+        if (k < 0)
+            return 0;
+        ll cur = (k + 1) * 2 + recur(x - (del * (k + 1)), recur);
+        return cache[x] = cur;
+    };
+
+    for (auto &x : c) {
+        ans += recur(x, recur);
+    }
+    cout << ans << endl;
+}
+
+int main() {
+#ifdef ONLINE_JUDGE
+    fastio;
+#endif
+    ll tes = 1;
+    // cin >> tes;
+    for (ll t = 1; t <= tes; t++) {
+        // cout << "Case #" << t << ": ";
+        solve();
+    }
 }

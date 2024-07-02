@@ -1,6 +1,6 @@
 const long long M = 1e9 + 7;
 const int INF = 2147483647;
-const long long INFLL = 9223372036854775807ll;
+const long long INFLL = 9223372036854775807ll / 100;
 #pragma region Template Start
 #include <algorithm>
 #include <chrono>
@@ -83,83 +83,68 @@ using ordered_multiset = tree<T, null_type, less_equal<T>, rb_tree_tag, tree_ord
     freopen("output.txt", "w", stdout)
 
 #pragma endregion Template End
-
 /*-----------------------------------------UTILITY FUNCTIONS------------------------------------------*/
-#pragma region Debug Statements
-void __print(int x) { cerr << x; }
-void __print(long x) { cerr << x; }
-void __print(long long x) { cerr << x; }
-void __print(unsigned x) { cerr << x; }
-void __print(unsigned long x) { cerr << x; }
-void __print(unsigned long long x) { cerr << x; }
-void __print(float x) { cerr << x; }
-void __print(double x) { cerr << x; }
-void __print(long double x) { cerr << x; }
-void __print(char x) { cerr << '\'' << x << '\''; }
-void __print(const char *x) { cerr << '\"' << x << '\"'; }
-void __print(const string &x) { cerr << '\"' << x << '\"'; }
-void __print(bool x) { cerr << (x ? "true" : "false"); }
-template <typename T, typename V>
-void __print(const pair<T, V> &x) {
-    cerr << '{';
-    __print(x.first);
-    cerr << ',';
-    __print(x.second);
-    cerr << '}';
-}
-template <typename T>
-void __print(const T &x) {
-    int f = 0;
-    cerr << '{';
-    for (auto &i : x) cerr << (f++ ? "," : ""), __print(i);
-    cerr << "}";
-}
-template <typename T>
-void __print(priority_queue<T> &q) {
-    vector<T> v;
-    while (q.size()) {
-        v.pb(q.top());
-        q.pop();
-    }
-    __print(v);
-    for (auto &i : v) q.push(i);
-}
-template <typename T>
-void __print(stack<T> &s) {
-    vector<T> v;
-    while (s.size()) {
-        v.pb(s.top());
-        s.pop();
-    }
-    reverse(all(v));
-    __print(v);
-    for (auto &i : v) s.push(i);
-}
-void _print() { cerr << "]\n"; }
-template <typename T, typename... V>
-void _print(T t, V... v) {
-    __print(t);
-    if (sizeof...(v)) cerr << ", ";
-    _print(v...);
-}
-#ifndef ONLINE_JUDGE
-#define debug(x...)               \
-    cerr << "[" << #x << "] = ["; \
-    _print(x)
-#else
-#define debug(x...)
-#endif
-#pragma endregion Debug end
 inline ll ceil(ll a, ll b) { return a / b + ((a ^ b) > 0 && a % b); }   // divide a by b rounded up
 inline ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divide a by b rounded down
 /*------------------------------------------END OF TEMPLATE-------------------------------------------*/
 
-int main() {
-    vector<int> a = {1, 2, 3, 4, 5};
-    vector<int> b = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    a.resize(b.size(), 0);
-    for (int i = 0; i < b.size(); i++) {
-        a[i] += b[i];
+void solve() {
+    int n;
+    cin >> n;
+    vll a(n);
+    fo(i, n) cin >> a[i];
+    vector<vector<ll>> adj(n);
+    fo(i, n - 1) {
+        ll x;
+        cin >> x;
+        adj[x - 1].push_back(i + 1);
     }
-    debug(a);
+    ll masterAns = 0;
+    auto dfs = [&](ll i, auto &dfs) -> vector<ll> {  // returns the free node value change when we only need to increment 1 node, 2 nodes, ...
+        if (adj[i].empty()) {
+            return {INFLL};  // we can do any amount of free increments on this leaf node without requiring children nodes to be incremented
+        }
+        ll childSum = 0;
+        for (auto &x : adj[i])
+            childSum += a[x];
+        ll requiredIncrement = a[i] - childSum;
+        ll zeroChildCostIncrement = max(0ll, childSum - a[i]);  // if child sum is larger than current node, then we can increment the parent node upto a certain point without affecting the children nodes
+        vector<ll> ans = {zeroChildCostIncrement};
+        vector<ll> childIncrementCosts;
+        for (auto &x : adj[i]) {
+            auto childCosts = dfs(x, dfs);
+            if (childCosts.size() > childIncrementCosts.size())
+                childIncrementCosts.resize(childCosts.size(), 0);
+            for (int i = 0; i < childCosts.size(); i++)
+                if (childIncrementCosts[i] < INFLL)
+                    childIncrementCosts[i] += childCosts[i];
+        }
+        for (ll incrementLevel = 0; requiredIncrement > 0 && incrementLevel < childIncrementCosts.size(); incrementLevel++) {
+            ll levelIncrement = min(requiredIncrement, childIncrementCosts[incrementLevel]);
+            masterAns += (incrementLevel + 1) * levelIncrement;
+            requiredIncrement -= levelIncrement;
+            childIncrementCosts[incrementLevel] -= levelIncrement;
+        }
+        if (ans.size() < childIncrementCosts.size() + 1)
+            ans.resize(childIncrementCosts.size() + 1, 0);
+        for (ll incrementLevel = 0; incrementLevel < childIncrementCosts.size(); incrementLevel++) {
+            if (ans[incrementLevel + 1] < INFLL)
+                ans[incrementLevel + 1] += childIncrementCosts[incrementLevel];
+        }
+        return ans;
+    };
+    dfs(0, dfs);
+    cout << masterAns << endl;
+}
+
+int main() {
+#ifdef ONLINE_JUDGE
+    fastio;
+#endif
+    ll tes = 1;
+    cin >> tes;
+    for (ll t = 1; t <= tes; t++) {
+        // cout << "Case #" << t << ": ";
+        solve();
+    }
 }
