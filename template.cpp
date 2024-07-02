@@ -82,7 +82,6 @@ inline ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divid
 /*------------------------------------------END OF TEMPLATE-------------------------------------------*/
 
 void solve() {
-    cout << "damn" << endl;
 }
 
 int main() {
