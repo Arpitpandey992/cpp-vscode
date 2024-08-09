@@ -83,87 +83,66 @@ using ordered_multiset = tree<T, null_type, less_equal<T>, rb_tree_tag, tree_ord
     freopen("output.txt", "w", stdout)
 
 #pragma endregion Template End
-
 /*-----------------------------------------UTILITY FUNCTIONS------------------------------------------*/
-#pragma region Debug Statements
-void __print(int x) { cerr << x; }
-void __print(long x) { cerr << x; }
-void __print(long long x) { cerr << x; }
-void __print(unsigned x) { cerr << x; }
-void __print(unsigned long x) { cerr << x; }
-void __print(unsigned long long x) { cerr << x; }
-void __print(float x) { cerr << x; }
-void __print(double x) { cerr << x; }
-void __print(long double x) { cerr << x; }
-void __print(char x) { cerr << '\'' << x << '\''; }
-void __print(const char *x) { cerr << '\"' << x << '\"'; }
-void __print(const string &x) { cerr << '\"' << x << '\"'; }
-void __print(bool x) { cerr << (x ? "true" : "false"); }
-template <typename T, typename V>
-void __print(const pair<T, V> &x) {
-    cerr << '{';
-    __print(x.first);
-    cerr << ',';
-    __print(x.second);
-    cerr << '}';
-}
-template <typename T>
-void __print(const T &x) {
-    int f = 0;
-    cerr << '{';
-    for (auto &i : x) cerr << (f++ ? "," : ""), __print(i);
-    cerr << "}";
-}
-template <typename T>
-void __print(priority_queue<T> &q) {
-    vector<T> v;
-    while (q.size()) {
-        v.pb(q.top());
-        q.pop();
-    }
-    __print(v);
-    for (auto &i : v) q.push(i);
-}
-template <typename T>
-void __print(stack<T> &s) {
-    vector<T> v;
-    while (s.size()) {
-        v.pb(s.top());
-        s.pop();
-    }
-    reverse(all(v));
-    __print(v);
-    for (auto &i : v) s.push(i);
-}
-void _print() { cerr << "]\n"; }
-template <typename T, typename... V>
-void _print(T t, V... v) {
-    __print(t);
-    if (sizeof...(v)) cerr << ", ";
-    _print(v...);
-}
-#ifndef ONLINE_JUDGE
-#define debug(x...)               \
-    cerr << "[" << #x << "] = ["; \
-    _print(x)
-#else
-#define debug(x...)
-#endif
-#pragma endregion Debug end
 inline ll ceil(ll a, ll b) { return a / b + ((a ^ b) > 0 && a % b); }   // divide a by b rounded up
 inline ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divide a by b rounded down
 /*------------------------------------------END OF TEMPLATE-------------------------------------------*/
 
-int main() {
-    set<int> s = {1, 2, 3, 4, 5, 6, 7, 8};
-    auto it1 = s.find(1);
-    auto it2 = s.find(3);
-    auto it3 = s.find(4);
-    auto it4 = s.find(7);
+void solve() {
+    int n;
+    cin >> n;
+    vll a(n);
+    fo(i, n) cin >> a[i];
+    vvll adj(n);
+    fok(i, 1, n) {
+        int p;
+        cin >> p;
+        adj[p - 1].pb(i);
+    }
 
-    s.erase(it1);
-    s.erase(it2);
-    s.erase(it3);
-    s.erase(it4);
-    debug(s);
+    auto dfs = [&](ll i, ll del, auto &dfs) -> bool {
+        if (INFLL - del < del)
+            return false;
+        bool hasChildren = adj[i].size() > 0;
+        if (!hasChildren)
+            return a[i] - del >= 0;
+        if (i != 0) {
+            del += max(-(a[i] - del), 0ll);
+        }
+        for (auto &x : adj[i]) {
+            if (!dfs(x, del, dfs)) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    auto can = [&](ll &k) -> bool {
+        ll del = k - a[0];
+        return dfs(0, del, dfs);
+    };
+
+    ll left = a[0],
+       right = 2 * 1e9 + 1;
+    while (left < right) {
+        ll mid = left + (right - left) / 2;
+        if (can(mid)) {
+            left = mid + 1;
+        } else {
+            right = mid;
+        }
+    }
+    cout << left - 1 << endl;
+}
+
+int main() {
+#ifdef ONLINE_JUDGE
+    fastio;
+#endif
+    ll tes = 1;
+    cin >> tes;
+    for (ll t = 1; t <= tes; t++) {
+        // cout << "Case #" << t << ": ";
+        solve();
+    }
 }
