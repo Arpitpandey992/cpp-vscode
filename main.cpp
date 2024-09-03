@@ -155,15 +155,10 @@ inline ll floor(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }  // divid
 /*------------------------------------------END OF TEMPLATE-------------------------------------------*/
 
 int main() {
-    set<int> s = {1, 2, 3, 4, 5, 6, 7, 8};
-    auto it1 = s.find(1);
-    auto it2 = s.find(3);
-    auto it3 = s.find(4);
-    auto it4 = s.find(7);
-
-    s.erase(it1);
-    s.erase(it2);
-    s.erase(it3);
-    s.erase(it4);
-    debug(s);
+    int a = 4, b = 6;
+    auto l = [b = a]() {
+        cout << b << endl;
+    };
+    l();
+    cout << a << endl;
 }
