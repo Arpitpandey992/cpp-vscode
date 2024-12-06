@@ -6,6 +6,17 @@
         "list": "cpp",
         "string": "cpp",
         "random": "cpp",
-        "ios": "cpp"
-    }
+        "ios": "cpp",
+        "__bit_reference": "cpp",
+        "__node_handle": "cpp",
+        "bitset": "cpp",
+        "__memory": "cpp",
+        "limits": "cpp",
+        "locale": "cpp",
+        "optional": "cpp",
+        "ratio": "cpp",
+        "tuple": "cpp",
+        "__config": "cpp"
+    },
+    "cph.general.defaultLanguageTemplateFileLocation": "/Users/arpit/Programming/C++/Competitive Programming/template.cpp",
 }

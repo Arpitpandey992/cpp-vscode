@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "vector": "cpp",
+        "climits": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "random": "cpp",
+        "ios": "cpp"
+    }
+}
